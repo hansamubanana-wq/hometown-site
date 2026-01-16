@@ -1,0 +1,377 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>故郷（魯迅）試験対策サイト</title>
+    <style>
+        /* =========================================
+           ベーススタイル（全体の見た目設定）
+           ========================================= */
+        :root {
+            /* 目に優しいカラーパレット */
+            --bg-color: #f5f5dc;       /* ベージュ（背景） */
+            --text-color: #2f4f4f;     /* ダークスレートグレー（文字） */
+            --accent-color: #556b2f;   /* オリーブグリーン（強調・ボタン） */
+            --white: #ffffff;          /* 白（カード背景） */
+            --highlight: #e0eee0;      /* 薄い緑（リスト背景など） */
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            font-family: "Helvetica Neue", Arial, "Hiragino Kaku Gothic ProN", "Hiragino Sans", Meiryo, sans-serif;
+            background-color: var(--bg-color);
+            color: var(--text-color);
+            line-height: 1.6;
+            padding: 20px;
+        }
+
+        /* コンテンツ幅の制限（PCで見やすくする） */
+        .container {
+            max-width: 800px;
+            margin: 0 auto;
+            background-color: var(--white);
+            padding: 30px;
+            border-radius: 8px;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+        }
+
+        h1, h2 {
+            color: var(--accent-color);
+            margin-bottom: 20px;
+        }
+
+        h2 {
+            border-bottom: 2px solid var(--accent-color);
+            padding-bottom: 5px;
+            margin-top: 40px;
+        }
+
+        /* =========================================
+           ヒーローセクション（タイトル・引用）
+           ========================================= */
+        .hero {
+            text-align: center;
+            padding: 40px 0;
+        }
+
+        .quote {
+            font-style: italic;
+            font-size: 1.1rem;
+            background-color: var(--highlight);
+            padding: 20px;
+            border-left: 5px solid var(--accent-color);
+            margin-top: 20px;
+            text-align: left;
+        }
+
+        /* =========================================
+           漢字・語句チェック（Details/Summary）
+           ========================================= */
+        details {
+            margin-bottom: 10px;
+            padding: 10px;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+            cursor: pointer;
+            transition: background-color 0.2s;
+        }
+
+        details:hover {
+            background-color: #fafafa;
+        }
+
+        summary {
+            font-weight: bold;
+            outline: none;
+        }
+
+        .word-meaning {
+            margin-top: 10px;
+            color: #555;
+            padding-left: 20px;
+        }
+
+        /* =========================================
+           徹底比較テーブル
+           ========================================= */
+        /* スマホで横スクロールさせるためのラッパー */
+        .table-wrapper {
+            overflow-x: auto;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            min-width: 500px; /* スマホで潰れないように最小幅を指定 */
+        }
+
+        th, td {
+            border: 1px solid #ccc;
+            padding: 12px;
+            text-align: left;
+        }
+
+        th {
+            background-color: var(--accent-color);
+            color: var(--white);
+            width: 20%;
+        }
+
+        td.past {
+            background-color: #fffaf0; /* 薄いオレンジっぽい色（昔） */
+        }
+
+        td.present {
+            background-color: #f0f8ff; /* 薄い青（今） */
+        }
+
+        /* =========================================
+           一問一答クイズ
+           ========================================= */
+        .quiz-item {
+            margin-bottom: 30px;
+            padding: 20px;
+            border: 1px solid #ddd;
+            border-radius: 8px;
+        }
+
+        .question {
+            font-weight: bold;
+            margin-bottom: 15px;
+            font-size: 1.1rem;
+        }
+
+        .options button {
+            display: block;
+            width: 100%;
+            padding: 10px;
+            margin-bottom: 10px;
+            border: 1px solid var(--accent-color);
+            background-color: white;
+            color: var(--accent-color);
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 1rem;
+            transition: all 0.2s;
+        }
+
+        .options button:hover {
+            background-color: var(--accent-color);
+            color: white;
+        }
+
+        /* 正解・不正解の表示スタイル */
+        .result-msg {
+            margin-top: 10px;
+            font-weight: bold;
+            padding: 10px;
+            border-radius: 5px;
+            display: none; /* 最初は非表示 */
+        }
+
+        .correct {
+            background-color: #d4edda;
+            color: #155724;
+            display: block;
+        }
+
+        .incorrect {
+            background-color: #f8d7da;
+            color: #721c24;
+            display: block;
+        }
+
+        /* フッター */
+        footer {
+            text-align: center;
+            margin-top: 50px;
+            font-size: 0.8rem;
+            color: #777;
+        }
+    </style>
+</head>
+<body>
+
+<div class="container">
+    <header class="hero">
+        <h1>故郷（魯迅）<br>試験対策まとめ</h1>
+        <div class="quote">
+            「希望とは地上の道のようなものである。もともと地上には道はない。歩く人が多くなれば、それが道になるのだ。」
+        </div>
+    </header>
+
+    <section>
+        <h2>重要語句・漢字チェック</h2>
+        <p style="margin-bottom:15px; font-size:0.9rem;">※クリックして読みと意味を確認しよう</p>
+        
+        <details>
+            <summary>猹</summary>
+            <div class="word-meaning">読み：チャー<br>意味：瓜を食う動物（魯迅の造語とも言われるアナグマの一種）。</div>
+        </details>
+
+        <details>
+            <summary>弶</summary>
+            <div class="word-meaning">読み：わな<br>意味：動物を捕まえる道具。</div>
+        </details>
+
+        <details>
+            <summary>伶利</summary>
+            <div class="word-meaning">読み：れいり<br>意味：賢いこと。</div>
+        </details>
+        
+        <details>
+            <summary>五行</summary>
+            <div class="word-meaning">読み：ごぎょう<br>意味：万物を構成する5つの元素（木・火・土・金・水）。閏土はこれが欠けていたため首輪をしていた。</div>
+        </details>
+    </section>
+
+    <section>
+        <h2>閏土（ルントゥ）の変化</h2>
+        <div class="table-wrapper">
+            <table>
+                <thead>
+                    <tr>
+                        <th>項目</th>
+                        <th>昔（少年時代）</th>
+                        <th>今（再会時）</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td>外見・顔</td>
+                        <td class="past">紫色の丸い顔<br>つやつやした顔</td>
+                        <td class="present">黄ばんだ色<br>深いしわ</td>
+                    </tr>
+                    <tr>
+                        <td>服装・装飾</td>
+                        <td class="past">小さなあじろ笠<br>銀の首輪</td>
+                        <td class="present">帽子なし<br>薄い綿入れ</td>
+                    </tr>
+                    <tr>
+                        <td>手</td>
+                        <td class="past">（記述なし・健康的）</td>
+                        <td class="present">松の皮のような手<br>ひび割れている</td>
+                    </tr>
+                    <tr>
+                        <td>呼び方</td>
+                        <td class="past">「兄さん（あにい）」</td>
+                        <td class="present">「旦那様」</td>
+                    </tr>
+                    <tr>
+                        <td>「私」との関係</td>
+                        <td class="past">すぐ仲良くなる<br>対等な関係</td>
+                        <td class="present">厚い壁がある<br>身分差を感じている</td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+    </section>
+
+    <section>
+        <h2>一問一答クイズ</h2>
+        <div id="quiz-container">
+            </div>
+    </section>
+
+    <footer>
+        &copy; 2024 故郷 試験対策委員会
+    </footer>
+</div>
+
+<script>
+    /* =========================================
+       クイズ機能のJavaScript
+       ========================================= */
+    
+    // クイズデータの配列（ここに追加すれば問題が増えます）
+    const quizData = [
+        {
+            question: "Q1. 閏土が昔、動物を捕まえるために持っていた武器は？",
+            options: ["銀の首輪", "鉄の銛（もり）", "木の棒"],
+            answer: "鉄の銛（もり）",
+            explanation: "「チャー」を突くために、銀の首輪ではなく鉄の銛を持っていました。"
+        },
+        {
+            question: "Q2. 再会した閏土は、「私」のことを何と呼んだ？",
+            options: ["兄さん", "先生", "旦那様"],
+            answer: "旦那様",
+            explanation: "昔は「兄さん」と呼んでいましたが、身分の差を感じて「旦那様」と呼び、私を悲しませました。"
+        },
+        {
+            question: "Q3. 最後の場面で、「私」が甥の宏児と閏土の息子の水生に託した願いは？",
+            options: ["今の自分たちのように暮らすこと", "互いに隔絶しない新しい生活", "故郷を離れて都会で暮らすこと"],
+            answer: "互いに隔絶しない新しい生活",
+            explanation: "「私」と閏土のように壁を作らず、心が通じ合う新しい生活を願いました。"
+        }
+    ];
+
+    // クイズを表示する関数
+    function loadQuiz() {
+        const quizContainer = document.getElementById('quiz-container');
+
+        quizData.forEach((data, index) => {
+            // HTML要素を作成
+            const quizItem = document.createElement('div');
+            quizItem.classList.add('quiz-item');
+
+            // 問題文
+            const questionText = document.createElement('div');
+            questionText.classList.add('question');
+            questionText.textContent = data.question;
+            quizItem.appendChild(questionText);
+
+            // 選択肢エリア
+            const optionsDiv = document.createElement('div');
+            optionsDiv.classList.add('options');
+
+            // 選択肢ボタンを作成
+            data.options.forEach(option => {
+                const btn = document.createElement('button');
+                btn.textContent = option;
+                btn.onclick = () => checkAnswer(btn, data.answer, data.explanation, resultDiv);
+                optionsDiv.appendChild(btn);
+            });
+            quizItem.appendChild(optionsDiv);
+
+            // 結果表示エリア
+            const resultDiv = document.createElement('div');
+            resultDiv.classList.add('result-msg');
+            quizItem.appendChild(resultDiv);
+
+            // コンテナに追加
+            quizContainer.appendChild(quizItem);
+        });
+    }
+
+    // 正誤判定をする関数
+    function checkAnswer(selectedBtn, correctAnswer, explanation, resultDiv) {
+        // すでに回答済みの場合は何もしない（連打防止）
+        if (resultDiv.style.display === 'block') return;
+
+        const selectedText = selectedBtn.textContent;
+
+        if (selectedText === correctAnswer) {
+            resultDiv.textContent = "正解！ " + explanation;
+            resultDiv.className = "result-msg correct"; // 緑色にするクラス
+        } else {
+            resultDiv.textContent = "残念、不正解... 正解は「" + correctAnswer + "」です。" + explanation;
+            resultDiv.className = "result-msg incorrect"; // 赤色にするクラス
+        }
+
+        // 結果を表示
+        resultDiv.style.display = 'block';
+    }
+
+    // ページ読み込み完了時にクイズを生成
+    window.onload = loadQuiz;
+
+</script>
+
+</body>
+</html>
