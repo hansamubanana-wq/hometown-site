@@ -3,38 +3,411 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>故郷（魯迅）試験対策サイト</title>
+    <title>故郷（魯迅）徹底攻略サイト</title>
     <style>
         /* =========================================
-           ベーススタイル（全体の見た目設定）
+           基本設定・カラーパレット
            ========================================= */
         :root {
-            /* 目に優しいカラーパレット */
-            --bg-color: #f5f5dc;       /* ベージュ（背景） */
-            --text-color: #2f4f4f;     /* ダークスレートグレー（文字） */
-            --accent-color: #556b2f;   /* オリーブグリーン（強調・ボタン） */
-            --white: #ffffff;          /* 白（カード背景） */
-            --highlight: #e0eee0;      /* 薄い緑（リスト背景など） */
+            --bg-color: #f5f5dc;       /* 背景：ベージュ */
+            --text-color: #333333;     /* 文字：濃いグレー */
+            --accent-color: #2e8b57;   /* アクセント：シーグリーン */
+            --sub-color: #8fbc8f;      /* サブ：ダークシーグリーン */
+            --white: #ffffff;
+            --box-shadow: 0 4px 6px rgba(0,0,0,0.1);
         }
 
-        * {
-            box-sizing: border-box;
-            margin: 0;
-            padding: 0;
-        }
-
+        * { box-sizing: border-box; margin: 0; padding: 0; }
+        
         body {
-            font-family: "Helvetica Neue", Arial, "Hiragino Kaku Gothic ProN", "Hiragino Sans", Meiryo, sans-serif;
+            font-family: "Hiragino Kaku Gothic ProN", Meiryo, sans-serif;
             background-color: var(--bg-color);
             color: var(--text-color);
-            line-height: 1.6;
-            padding: 20px;
+            line-height: 1.8;
+            padding: 10px;
         }
 
-        /* コンテンツ幅の制限（PCで見やすくする） */
         .container {
-            max-width: 800px;
+            max-width: 900px;
             margin: 0 auto;
+            background-color: var(--white);
+            padding: 20px; /* スマホ向けに少し狭める */
+            border-radius: 8px;
+            box-shadow: var(--box-shadow);
+        }
+
+        /* PC向けの余白調整 */
+        @media (min-width: 600px) {
+            .container { padding: 40px; }
+            body { padding: 20px; }
+        }
+
+        h1 {
+            color: var(--accent-color);
+            text-align: center;
+            margin-bottom: 10px;
+        }
+
+        h2 {
+            border-left: 6px solid var(--accent-color);
+            padding-left: 10px;
+            margin: 40px 0 20px;
+            background-color: #f0fff0;
+            padding: 10px;
+            border-radius: 0 5px 5px 0;
+        }
+
+        h3 {
+            color: var(--accent-color);
+            margin: 25px 0 10px;
+            border-bottom: 1px dashed var(--accent-color);
+        }
+
+        /* ナビゲーション */
+        .nav-menu {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: center;
+            gap: 10px;
+            margin-bottom: 30px;
+            background: var(--sub-color);
+            padding: 10px;
+            border-radius: 5px;
+        }
+        .nav-menu a {
+            color: white;
+            text-decoration: none;
+            font-weight: bold;
+            font-size: 0.9rem;
+            padding: 5px 10px;
+            border-radius: 4px;
+            transition: background 0.3s;
+        }
+        .nav-menu a:hover {
+            background-color: var(--accent-color);
+        }
+
+        /* ヒーローエリア */
+        .hero-quote {
+            font-style: italic;
+            background-color: #e8f5e9;
+            padding: 20px;
+            border-radius: 8px;
+            margin: 20px 0;
+            text-align: center;
+            font-weight: bold;
+            color: var(--accent-color);
+        }
+
+        /* =========================================
+           登場人物カード
+           ========================================= */
+        .character-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 15px;
+        }
+
+        .char-card {
+            border: 1px solid #ddd;
+            border-radius: 8px;
+            padding: 15px;
+            background: #fff;
+            box-shadow: 2px 2px 5px rgba(0,0,0,0.05);
+        }
+
+        .char-name {
+            font-weight: bold;
+            color: var(--accent-color);
+            font-size: 1.1rem;
+            margin-bottom: 5px;
+            border-bottom: 2px solid var(--sub-color);
+            display: inline-block;
+        }
+
+        /* =========================================
+           相関図（CSSだけで描画）
+           ========================================= */
+        .relation-chart {
+            background-color: #fafafa;
+            padding: 20px;
+            border-radius: 8px;
+            text-align: center;
+            border: 1px solid #ddd;
+        }
+
+        .relation-row {
+            display: flex;
+            justify-content: space-around;
+            align-items: center;
+            margin-bottom: 20px;
+            flex-wrap: wrap;
+            gap: 10px;
+        }
+
+        .box {
+            padding: 10px 20px;
+            background: var(--accent-color);
+            color: white;
+            border-radius: 5px;
+            font-weight: bold;
+            width: 120px;
+        }
+
+        .box-sub {
+            background: var(--sub-color);
+        }
+
+        .arrow-text {
+            font-size: 0.8rem;
+            color: #555;
+            position: relative;
+            padding: 0 10px;
+        }
+        
+        /* 矢印の線 */
+        .arrow-text::after {
+            content: "↔";
+            display: block;
+            font-size: 1.5rem;
+            color: #999;
+        }
+        
+        .arrow-text.future::after { content: "→"; color: var(--accent-color); }
+
+        /* =========================================
+           比較テーブル & 語句（前回同様）
+           ========================================= */
+        .table-wrapper { overflow-x: auto; }
+        table { width: 100%; border-collapse: collapse; min-width: 500px; margin-bottom: 10px;}
+        th, td { border: 1px solid #ccc; padding: 10px; }
+        th { background: var(--accent-color); color: white; width: 20%; }
+        td.past { background: #fffaf0; }
+        td.present { background: #f0f8ff; }
+
+        details {
+            background: #f9f9f9;
+            margin-bottom: 10px;
+            padding: 10px;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+        summary { font-weight: bold; outline: none; }
+        .details-content { padding: 10px 0 0 10px; color: #555; }
+
+        /* 本文表示エリア */
+        .full-text-area {
+            max-height: 400px;
+            overflow-y: scroll;
+            background: #fff;
+            border: 1px solid #ddd;
+            padding: 15px;
+            font-size: 0.9rem;
+            white-space: pre-wrap; /* 改行をそのまま表示 */
+        }
+
+        /* クイズ */
+        .quiz-item { margin-bottom: 20px; padding: 15px; border: 1px solid #eee; border-radius: 8px; }
+        .options button {
+            width: 100%; padding: 10px; margin-top: 5px;
+            background: white; border: 1px solid var(--accent-color);
+            color: var(--accent-color); border-radius: 4px;
+        }
+        .options button:hover { background: var(--accent-color); color: white; }
+        .result-msg { margin-top: 10px; font-weight: bold; padding: 10px; border-radius: 4px; display: none; }
+        .correct { background: #d4edda; color: #155724; }
+        .incorrect { background: #f8d7da; color: #721c24; }
+
+        footer { text-align: center; margin-top: 40px; font-size: 0.8rem; color: #888; }
+    </style>
+</head>
+<body>
+
+<div class="container">
+    <header>
+        <h1>故郷（魯迅）徹底攻略</h1>
+        <div class="nav-menu">
+            <a href="#summary">あらすじ</a>
+            <a href="#characters">登場人物</a>
+            <a href="#relation">相関図</a>
+            <a href="#compare">閏土の変化</a>
+            <a href="#text">本文</a>
+            <a href="#quiz">クイズ</a>
+        </div>
+        <div class="hero-quote">
+            「希望とは地上の道のようなものである。<br>もともと地上には道はない。<br>歩く人が多くなれば、それが道になるのだ。」
+        </div>
+    </header>
+
+    <section id="summary">
+        <h2>あらすじ（要約）</h2>
+        <div style="background: #fff; padding: 15px; border-radius: 5px; border-left: 4px solid var(--sub-color);">
+            <p><strong>【起】帰郷</strong><br>
+            二十年ぶりに故郷へ帰った「私」。しかし、故郷は記憶にある美しい場所ではなく、荒れ果てていた。家を売り払い、引っ越すための帰郷であった。</p>
+            <br>
+            <p><strong>【承】回想</strong><br>
+            「私」は母との会話から、かつての親友・閏土（ルントゥ）を思い出す。少年時代の彼は紫色の丸い顔をし、生き生きとしていた。二人は身分の差を超えて友情を育んでいた。</p>
+            <br>
+            <p><strong>【転】再会</strong><br>
+            閏土が訪ねてくる。しかし、現れた彼は深いしわを刻み、生活に疲弊していた。そして彼は「私」に向かって「旦那様」と呼び、二人の間には悲しむべき「厚い壁」ができていた。</p>
+            <br>
+            <p><strong>【結】旅立ち</strong><br>
+            「私」は故郷を離れる船の中で、甥の宏児と閏土の息子・水生が仲良くしていたことを思う。若い世代には、自分たちのような「壁」のない新しい生活を送ってほしいと願い、希望についての思索を巡らせる。</p>
+        </div>
+    </section>
+
+    <section id="characters">
+        <h2>登場人物</h2>
+        <div class="character-grid">
+            <div class="char-card">
+                <span class="char-name">私（迅ちゃん）</span>
+                <p>この物語の語り手。20年ぶりに故郷へ戻る。昔の美しい故郷と今の荒廃した現実のギャップに苦悩する。インテリ層。</p>
+            </div>
+            <div class="char-card">
+                <span class="char-name">閏土（ルントゥ）</span>
+                <p>「私」の少年時代の親友。小作人の息子。昔は英雄のようだったが、現在は多子、飢饉、重税などに苦しめられ、木偶（でく）のように鈍くなっている。</p>
+            </div>
+            <div class="char-card">
+                <span class="char-name">ヤンおばさん</span>
+                <p>「豆腐屋小町」。昔は美人で評判だったが、今はコンパスのように痩せた意地悪な中年の女性。「私」を冷やかす。</p>
+            </div>
+            <div class="char-card">
+                <span class="char-name">宏児（ホンル）</span>
+                <p>「私」の甥。これから引っ越す未知の土地を楽しみにしている。水生とすぐに仲良くなる。</p>
+            </div>
+            <div class="char-card">
+                <span class="char-name">水生（シュイション）</span>
+                <p>閏土の五番目の子供。昔の閏土に面影が似ている。宏児と仲良くなる（次世代の希望）。</p>
+            </div>
+        </div>
+    </section>
+
+    <section id="relation">
+        <h2>人物相関図</h2>
+        <div class="relation-chart">
+            <p style="margin-bottom:15px; font-weight:bold;">【過去：少年時代】</p>
+            <div class="relation-row">
+                <div class="box">私</div>
+                <div class="arrow-text">友情・対等<br>「兄さん」</div>
+                <div class="box">閏土</div>
+            </div>
+            <hr style="margin: 20px 0; border:none; border-top:1px dashed #ccc;">
+            <p style="margin-bottom:15px; font-weight:bold;">【現在：20年後】</p>
+            <div class="relation-row">
+                <div class="box">私</div>
+                <div class="arrow-text">隔絶・悲哀<br>「旦那様」</div>
+                <div class="box">閏土</div>
+            </div>
+            <div class="relation-row" style="margin-top:20px;">
+                <div class="box box-sub">宏児</div>
+                <div class="arrow-text future">次世代の希望<br>（仲良し）</div>
+                <div class="box box-sub">水生</div>
+            </div>
+        </div>
+    </section>
+
+    <section id="compare">
+        <h2>閏土の「昔」と「今」</h2>
+        <div class="table-wrapper">
+            <table>
+                <thead>
+                    <tr><th>項目</th><th>昔（少年時代）</th><th>今（再会時）</th></tr>
+                </thead>
+                <tbody>
+                    <tr><td>顔色</td><td class="past">紫色の丸い顔<br>つやつや</td><td class="present">黄ばんだ色<br>深いしわ</td></tr>
+                    <tr><td>服装</td><td class="past">小さなあじろ笠<br>銀の首輪</td><td class="present">古ぼけた帽子<br>薄い綿入れ</td></tr>
+                    <tr><td>手</td><td class="past">赤々とした手</td><td class="present">松の皮のように<br>ひび割れた手</td></tr>
+                    <tr><td>性格</td><td class="past">活発・利発<br>「英雄」</td><td class="present">木偶（でく）のよう<br>悲観的</td></tr>
+                </tbody>
+            </table>
+        </div>
+    </section>
+
+    <section id="text">
+        <h2>本文（全文掲載）</h2>
+        <p style="font-size:0.8rem; color:#666; margin-bottom:10px;">※タップして開く（長文注意）</p>
+        <details>
+            <summary>ここをクリックして本文を読む</summary>
+            <div class="full-text-area">
+（前略）
+　私は、烈（はげ）しい寒さのなかに、二千里をへだてて、別れてから二十年にもなる故郷へ帰った。
+　ときは真冬のことであったから、故郷へ近づくにしたがって、天気は模様があやしくなり、冷たい風がヒューヒューと音を立てて、船室の中まで吹きこんできた。苫（とま）の隙間から外をうかがうと、鉛色の空の下に、わびしい村々が、いささかの活気もなく、あちこちに横たわっていた。私の心は、言いようのない寂しさにふさがれてしまった。
+　ああ、これが、私が二十年来、片時も忘れることのなかった故郷であろうか。
+
+（中略：母との再会、回想シーン）
+
+　ある日の昼過ぎであった。寒かったが、飯を食って茶を飲んでいると、外で足音がして、
+「ハッ、迅ちゃん。」
+　という声がした。
+　私はびっくりして茶碗（ちゃわん）を取り落しそうになった。急いで振り向くと、そこに立っていたのは、まさしく閏土であった。
+　私は思わず、
+「やあ、閏土。よく来たね。」
+　と言った。
+　言いたいことは山ほどあった。角鶏（チャー）のこと、跳魚（はぜ）のこと、貝殻のこと、猹（チャー）のこと……。それらが一時に胸の中に湧き上ってきて、友の口を借りて吐き出されるのを待っているかのようであった。しかし、その言葉は、喉（のど）のところでつかえてしまって、どうしても口へ出なかった。
+　彼はそのまま突っ立っていた。喜びと寂しさの色が、顔に現われた。唇が動いたが、声にはならなかった。そして恭（うやうや）しい態度をとると、はっきりこう言った。
+「旦那様！……」
+　私は身震いした。悲しむべき厚い壁が、二人の間を隔ててしまっているのを感じた。私には口がきけなかった。
+
+（後略：旅立ち、希望の独白）
+
+　私は考えた。――希望とは、本来あるとも言えぬし、ないとも言えない。それは地上の道のようなものである。もともと地上には道はない。歩く人が多くなれば、それが道になるのだ。
+            </div>
+            <p style="font-size:0.8rem; text-align:right; margin-top:5px;">出典：青空文庫（井上紅梅訳）</p>
+        </details>
+    </section>
+
+    <section id="quiz">
+        <h2>確認クイズ</h2>
+        <div id="quiz-container"></div>
+    </section>
+
+    <footer>&copy; 2024 故郷 試験対策委員会</footer>
+</div>
+
+<script>
+    const quizData = [
+        { q: "Q1. 閏土が昔「チャー」を突くために持っていた武器は？", o: ["銀の首輪", "鉄の銛", "木の棒"], a: "鉄の銛", exp: "銀の首輪は魔除けです。" },
+        { q: "Q2. 再会した閏土は「私」を何と呼んだ？", o: ["迅ちゃん", "兄さん", "旦那様"], a: "旦那様", exp: "身分の差を感じて「旦那様」と呼び、私を絶望させました。" },
+        { q: "Q3. 「ヤンおばさん」のあだ名は？", o: ["豆腐屋小町", "あじろ笠の女", "コンパス娘"], a: "豆腐屋小町", exp: "今はコンパスのように痩せていますが、昔は豆腐屋小町と呼ばれる美人でした。" },
+        { q: "Q4. 作中のラストで「希望」は何に例えられた？", o: ["夜空の月", "地上の道", "海辺の貝殻"], a: "地上の道", exp: "「歩く人が多くなれば、それが道になる」と結ばれています。" }
+    ];
+
+    const container = document.getElementById('quiz-container');
+    
+    quizData.forEach((d, i) => {
+        const item = document.createElement('div');
+        item.className = 'quiz-item';
+        
+        const qEl = document.createElement('div');
+        qEl.innerHTML = `<strong>${d.q}</strong>`;
+        item.appendChild(qEl);
+
+        const opts = document.createElement('div');
+        opts.className = 'options';
+        d.o.forEach(opt => {
+            const btn = document.createElement('button');
+            btn.textContent = opt;
+            btn.onclick = () => {
+                if(res.style.display === 'block') return;
+                const isCorrect = opt === d.a;
+                res.textContent = (isCorrect ? "正解！ " : "不正解... ") + d.exp;
+                res.className = `result-msg ${isCorrect ? 'correct' : 'incorrect'}`;
+                res.style.display = 'block';
+            };
+            opts.appendChild(btn);
+        });
+        item.appendChild(opts);
+
+        const res = document.createElement('div');
+        res.className = 'result-msg';
+        item.appendChild(res);
+        
+        container.appendChild(item);
+    });
+</script>
+
+</body>
+</html>            margin: 0 auto;
             background-color: var(--white);
             padding: 30px;
             border-radius: 8px;
