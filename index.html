@@ -3,38 +3,586 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>故郷（魯迅）徹底攻略サイト</title>
+    <title>PROJECT: HOMETOWN</title>
     <style>
         /* =========================================
-           基本設定・カラーパレット
+           CYBERPUNK THEME SETTINGS
            ========================================= */
         :root {
-            --bg-color: #f5f5dc;       /* 背景：ベージュ */
-            --text-color: #333333;     /* 文字：濃いグレー */
-            --accent-color: #2e8b57;   /* アクセント：シーグリーン */
-            --sub-color: #8fbc8f;      /* サブ：ダークシーグリーン */
-            --white: #ffffff;
-            --box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+            --bg-color: #050505;
+            --card-bg: #0a0a0a;
+            --text-main: #e0e0e0;
+            --text-dim: #888;
+            --primary: #00f3ff;   /* Neon Cyan */
+            --secondary: #ff0055; /* Neon Pink */
+            --accent: #39ff14;    /* Neon Green */
+            --grid-line: rgba(0, 243, 255, 0.1);
+            --font-tech: "Courier New", Courier, monospace;
+            --font-base: "Helvetica Neue", Arial, sans-serif;
         }
 
         * { box-sizing: border-box; margin: 0; padding: 0; }
-        
+
         body {
-            font-family: "Hiragino Kaku Gothic ProN", Meiryo, sans-serif;
             background-color: var(--bg-color);
-            color: var(--text-color);
-            line-height: 1.8;
-            padding: 10px;
+            color: var(--text-main);
+            font-family: var(--font-base);
+            /* グリッド背景 */
+            background-image: 
+                linear-gradient(var(--grid-line) 1px, transparent 1px),
+                linear-gradient(90deg, var(--grid-line) 1px, transparent 1px);
+            background-size: 40px 40px;
+            line-height: 1.6;
+            padding-bottom: 50px;
         }
 
         .container {
-            max-width: 900px;
+            max-width: 1000px;
             margin: 0 auto;
-            background-color: var(--white);
-            padding: 20px; /* スマホ向けに少し狭める */
-            border-radius: 8px;
-            box-shadow: var(--box-shadow);
+            padding: 20px;
         }
+
+        /* 共通スタイル */
+        h1, h2, h3 {
+            font-family: var(--font-tech);
+            text-transform: uppercase;
+            letter-spacing: 2px;
+        }
+
+        h1 {
+            color: var(--primary);
+            text-shadow: 0 0 10px var(--primary);
+            text-align: center;
+            margin: 40px 0 20px;
+            font-size: 2.5rem;
+            border-bottom: 2px solid var(--primary);
+            display: inline-block;
+            padding-bottom: 10px;
+        }
+        
+        /* 画面中央寄せ用ラッパー */
+        header { text-align: center; margin-bottom: 40px; }
+
+        h2 {
+            color: var(--secondary);
+            border-left: 5px solid var(--secondary);
+            padding-left: 15px;
+            margin: 60px 0 30px;
+            text-shadow: 0 0 5px var(--secondary);
+            background: linear-gradient(90deg, rgba(255,0,85,0.1), transparent);
+        }
+
+        /* ナビゲーションボタン */
+        .nav-menu {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: center;
+            gap: 15px;
+            margin-bottom: 40px;
+        }
+        .nav-btn {
+            background: transparent;
+            border: 1px solid var(--primary);
+            color: var(--primary);
+            padding: 10px 20px;
+            text-decoration: none;
+            font-family: var(--font-tech);
+            font-weight: bold;
+            transition: 0.3s;
+            text-transform: uppercase;
+            position: relative;
+            overflow: hidden;
+        }
+        .nav-btn:hover {
+            background: var(--primary);
+            color: #000;
+            box-shadow: 0 0 15px var(--primary);
+        }
+
+        /* ヒーロー引用 */
+        .hero-quote {
+            border: 1px solid var(--accent);
+            color: var(--accent);
+            padding: 20px;
+            text-align: center;
+            font-family: var(--font-tech);
+            margin: 20px auto;
+            max-width: 800px;
+            background: rgba(57, 255, 20, 0.05);
+            box-shadow: 0 0 10px rgba(57, 255, 20, 0.2);
+        }
+
+        /* カードデザイン */
+        .cyber-card {
+            background: var(--card-bg);
+            border: 1px solid #333;
+            padding: 20px;
+            margin-bottom: 20px;
+            position: relative;
+        }
+        .cyber-card::before {
+            content: "";
+            position: absolute;
+            top: 0; left: 0;
+            width: 10px; height: 10px;
+            border-top: 2px solid var(--primary);
+            border-left: 2px solid var(--primary);
+        }
+        .cyber-card::after {
+            content: "";
+            position: absolute;
+            bottom: 0; right: 0;
+            width: 10px; height: 10px;
+            border-bottom: 2px solid var(--primary);
+            border-right: 2px solid var(--primary);
+        }
+
+        /* 登場人物グリッド */
+        .char-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 20px;
+        }
+        .char-box {
+            background: rgba(255, 255, 255, 0.05);
+            padding: 15px;
+            border-left: 3px solid var(--primary);
+        }
+        .char-name {
+            color: var(--primary);
+            font-size: 1.2rem;
+            font-weight: bold;
+            margin-bottom: 5px;
+            font-family: var(--font-tech);
+        }
+
+        /* =========================================
+           相関図 (Network Graph Style)
+           ========================================= */
+        .network-chart {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 40px;
+            padding: 30px;
+            background: radial-gradient(circle at center, #1a1a1a, #000);
+            border: 1px solid #333;
+            border-radius: 10px;
+        }
+
+        .network-row {
+            display: flex;
+            justify-content: center;
+            gap: 50px;
+            position: relative;
+            flex-wrap: wrap;
+        }
+
+        .node {
+            width: 100px;
+            height: 100px;
+            border-radius: 50%;
+            border: 2px solid var(--primary);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: bold;
+            background: #000;
+            box-shadow: 0 0 15px rgba(0, 243, 255, 0.3);
+            z-index: 2;
+            position: relative;
+        }
+
+        .node-sub {
+            border-color: var(--accent);
+            box-shadow: 0 0 15px rgba(57, 255, 20, 0.3);
+            width: 80px;
+            height: 80px;
+            font-size: 0.9rem;
+        }
+
+        /* 関係性ライン（CSS疑似要素で表現） */
+        .connection-line {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            width: 80%;
+            height: 2px;
+            background: var(--text-dim);
+            z-index: 1;
+        }
+        
+        .connection-label {
+            position: absolute;
+            top: -25px;
+            left: 50%;
+            transform: translateX(-50%);
+            background: #000;
+            padding: 2px 8px;
+            border: 1px solid var(--secondary);
+            color: var(--secondary);
+            font-size: 0.8rem;
+            white-space: nowrap;
+        }
+
+        /* テーブル */
+        .table-container { overflow-x: auto; }
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 10px;
+            min-width: 600px;
+        }
+        th, td {
+            border: 1px solid #333;
+            padding: 12px;
+            text-align: left;
+        }
+        th {
+            background-color: rgba(0, 243, 255, 0.1);
+            color: var(--primary);
+        }
+        td { color: #ccc; }
+        tr:hover td { background-color: rgba(255, 255, 255, 0.05); }
+
+        /* =========================================
+           全文表示エリア (Terminal Style)
+           ========================================= */
+        .terminal-window {
+            background-color: #000;
+            border: 1px solid var(--text-dim);
+            border-radius: 5px;
+            box-shadow: 0 0 20px rgba(0,0,0,0.8);
+            margin-top: 20px;
+        }
+        .terminal-header {
+            background: #222;
+            padding: 5px 10px;
+            color: #aaa;
+            font-size: 0.8rem;
+            border-bottom: 1px solid #444;
+            display: flex;
+            justify-content: space-between;
+        }
+        .full-text-content {
+            height: 500px;
+            overflow-y: scroll;
+            padding: 20px;
+            font-family: "Hiragino Mincho ProN", "Yu Mincho", serif;
+            font-size: 1rem;
+            color: #ccc;
+            white-space: pre-wrap; /* 改行を維持 */
+            scrollbar-color: var(--primary) #111;
+            scrollbar-width: thin;
+        }
+        /* スクロールバー装飾 (Chrome/Safari) */
+        .full-text-content::-webkit-scrollbar { width: 8px; }
+        .full-text-content::-webkit-scrollbar-track { background: #111; }
+        .full-text-content::-webkit-scrollbar-thumb { background: var(--primary); }
+
+        /* クイズ */
+        .quiz-option {
+            width: 100%;
+            background: transparent;
+            border: 1px solid var(--text-dim);
+            color: var(--text-main);
+            padding: 15px;
+            margin-top: 10px;
+            cursor: pointer;
+            text-align: left;
+            transition: 0.2s;
+        }
+        .quiz-option:hover {
+            border-color: var(--primary);
+            background: rgba(0, 243, 255, 0.1);
+        }
+        .result-box {
+            margin-top: 15px;
+            padding: 15px;
+            border: 1px solid transparent;
+            display: none;
+        }
+        .res-correct { border-color: var(--accent); color: var(--accent); background: rgba(57, 255, 20, 0.1); }
+        .res-wrong { border-color: var(--secondary); color: var(--secondary); background: rgba(255, 0, 85, 0.1); }
+
+        /* フッター */
+        footer {
+            text-align: center;
+            margin-top: 60px;
+            color: #555;
+            font-family: var(--font-tech);
+            font-size: 0.8rem;
+        }
+
+    </style>
+</head>
+<body>
+
+<div class="container">
+    <header>
+        <h1>PROJECT: HOMETOWN</h1>
+        <div class="nav-menu">
+            <a href="#summary" class="nav-btn">DATA: SUMMARY</a>
+            <a href="#chars" class="nav-btn">DATA: PROFILES</a>
+            <a href="#network" class="nav-btn">DATA: NETWORK</a>
+            <a href="#compare" class="nav-btn">DATA: COMPARE</a>
+            <a href="#fulltext" class="nav-btn">FILE: READ_ALL</a>
+            <a href="#quiz" class="nav-btn">TEST_MODULE</a>
+        </div>
+        <div class="hero-quote">
+            > SYSTEM MSG: "希望とは地上の道のようなものである。もともと地上には道はない。歩く人が多くなれば、それが道になるのだ。"
+        </div>
+    </header>
+
+    <section id="summary">
+        <h2>01. PLOT SUMMARY</h2>
+        <div class="cyber-card">
+            <h3 style="color:var(--primary); margin-bottom:10px;">MISSION: 帰郷と旅立ち</h3>
+            <p><strong>【Status: 荒廃】</strong><br>
+            主人公「私」は20年ぶりに故郷へ帰還。しかし、記憶の中の美しい故郷は失われ、現実は荒廃していた。</p>
+            <br>
+            <p><strong>【Memory: 回想】</strong><br>
+            母との対話から、かつての英雄的少年「閏土（ルントゥ）」との記憶が蘇る。身分を超えた友情のデータ。</p>
+            <br>
+            <p><strong>【Encounter: 再会】</strong><br>
+            閏土が出現。しかし、彼は過酷な社会システム（多子、飢饉、重税）により劣化。「旦那様」という言葉が、二人の間に不可視の壁を形成した。</p>
+            <br>
+            <p><strong>【Future: 希望】</strong><br>
+            次世代（宏児と水生）へのデータ移行。我々のような断絶がない新しい世界への渇望。</p>
+        </div>
+    </section>
+
+    <section id="chars">
+        <h2>02. CHARACTER PROFILES</h2>
+        <div class="char-grid">
+            <div class="char-box">
+                <div class="char-name">CODE: I (私)</div>
+                <p>Class: Intellectual<br>Status: Disappointed<br>
+                故郷の変貌と旧友との断絶に苦悩する観察者。</p>
+            </div>
+            <div class="char-box">
+                <div class="char-name">CODE: RUNTU (閏土)</div>
+                <p>Class: Peasant<br>Status: Overloaded<br>
+                かつては神童。現在は社会の重圧により「木偶」のように鈍化。</p>
+            </div>
+            <div class="char-box">
+                <div class="char-name">CODE: YANG (ヤンおばさん)</div>
+                <p>Alias: Tofu Beauty<br>Status: Sharp<br>
+                コンパスのように痩せた女性。シニカルな言動で「私」を攻撃。</p>
+            </div>
+            <div class="char-box">
+                <div class="char-name">CODE: HONG & SHUI</div>
+                <p>Role: Next Generation<br>
+                宏児（私の甥）と水生（閏土の息子）。階級の壁を持たない希望。</p>
+            </div>
+        </div>
+    </section>
+
+    <section id="network">
+        <h2>03. RELATION NETWORK</h2>
+        <div class="cyber-card">
+            <p style="text-align:center; margin-bottom:20px; color:var(--text-dim);">[ PHASE 1: PAST (20年前) ]</p>
+            <div class="network-chart">
+                <div class="network-row">
+                    <div class="node">私</div>
+                    <div class="connection-line"></div>
+                    <div class="connection-label" style="border-color:var(--accent); color:var(--accent);">友情・対等</div>
+                    <div class="node">閏土</div>
+                </div>
+            </div>
+
+            <p style="text-align:center; margin:40px 0 20px; color:var(--text-dim);">[ PHASE 2: PRESENT (現在) ]</p>
+            <div class="network-chart" style="border-color:var(--secondary);">
+                <div class="network-row">
+                    <div class="node" style="border-color:var(--secondary);">私</div>
+                    <div class="connection-line"></div>
+                    <div class="connection-label">断絶「旦那様」</div>
+                    <div class="node" style="border-color:var(--secondary);">閏土</div>
+                </div>
+                <div class="network-row" style="margin-top:20px;">
+                    <div class="node node-sub">宏児</div>
+                    <div class="connection-line" style="width:60%; border-bottom:1px dashed var(--accent);"></div>
+                    <div class="connection-label" style="top:-15px; border-color:var(--accent); color:var(--accent);">LINK OK</div>
+                    <div class="node node-sub">水生</div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section id="compare">
+        <h2>04. DATA COMPARISON</h2>
+        <div class="table-container">
+            <table>
+                <thead>
+                    <tr>
+                        <th>PARAMETER</th>
+                        <th>PAST (少年期)</th>
+                        <th>PRESENT (中年期)</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td>VISUAL</td>
+                        <td>紫色の丸い顔<br>銀の首輪</td>
+                        <td>黄ばんだしわだらけの顔<br>薄い綿入れ</td>
+                    </tr>
+                    <tr>
+                        <td>ITEM</td>
+                        <td>鉄の銛（武器）</td>
+                        <td>長いパイプ（疲労）</td>
+                    </tr>
+                    <tr>
+                        <td>PROTOCOL</td>
+                        <td>「兄さん」<br>(Friendship)</td>
+                        <td>「旦那様」<br>(Hierarchy)</td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+    </section>
+
+    <section id="fulltext">
+        <h2>05. SOURCE FILE (FULL TEXT)</h2>
+        <div class="terminal-window">
+            <div class="terminal-header">
+                <span>FILE: hometown_luxun.txt</span>
+                <span>STATUS: READ_ONLY</span>
+            </div>
+            <div class="full-text-content">
+故郷
+魯迅　井上紅梅訳
+
+　私は、烈しい寒さのなかに、二千里をへだてて、別れてから二十年にもなる故郷へ帰った。
+　ときは真冬のことであったから、故郷へ近づくにしたがって、天気は模様があやしくなり、冷たい風がヒューヒューと音を立てて、船室の中まで吹きこんできた。苫の隙間から外をうかがうと、鉛色の空の下に、わびしい村々が、いささかの活気もなく、あちこちに横たわっていた。私の心は、言いようのない寂しさにふさがれてしまった。
+　ああ、これが、私が二十年来、片時も忘れることのなかった故郷であろうか。
+　私の覚えている故郷は、けっしてこのようなものではなかった。私の故郷は、もっと美しかった。しかし、その美しさをありありと思い出そうとし、その美しさを言葉に表わそうとすると、その影はかき消され、言葉は失われて、やはりこのような、わびしい村になってしまうのであった。そこで私は、自分に言い聞かせた。故郷とはもともとこうしたものなのだ。進歩もしなければ、そうかと言って、私が感じるほどわびしいものでもないのだ。それはただ、私の心境の変化にすぎないのだ。なぜなら、今回の帰郷は、楽しい気持でするものではないからだ。
+　私は、今度の帰郷の目的を、つとに承知していた。こちらの古い家は、もうとっくに共同名義になっていて、今度それが他人の手に渡ることになったので、その引渡しの期限である今年の末までに、立ち退かなければならないからだ。それで、私は、今住んでいる遠くの町から、一家をあげて引っ越すために、この家へ別れを告げに来たのである。
+　あくる日の朝早く、私はわが家の門口へ立った。屋根の瓦には、枯草の茎が幾本となく風に吹かれてなびいていた。それは、この古い家が持ち主を変えようとしている理由を、顔にはっきり現わしているようであった。幾つかの部屋には、他の家族が住みこんでいたので、わが家はよけいに静まりかえっていた。
+　私が着いたとき、母はもう門口へ出て出迎えてくれた。八つになる甥の宏児（ホンル）も飛び出して来た。母の機嫌はよかったが、なんとなく寂しい表情が隠せなかった。母は私を坐らせ、お茶をついでくれ、その合間にいろいろなことを話した。
+　宏児は、今まで一度も顔を合わせたことがなかったので、遠くの方から私を見つめていた。
+　いよいよ、家を借りる話がついたので、家具を売り払って、新しい道具を買う金をこしらえ、それを借りて帰るという段取りになった。母は、荷造りはおおかた済んでいるし、家具も大体売れてしまったが、ただ重い物だけが残っているので、それさえ片づけば、いつでも出発できると言った。
+　私は、二、三日休んだら、親戚まわりをして、それから出発しようと答えた。
+「そうそう、閏土（ルントゥ）には、いつ会えるだろうね。お前が帰ると言うと、どんなに喜ぶだろう。」
+　と、母は言った。
+　このとき、私の脳裡には、不思議な画面が閃いた。深い紺青の空に、金色の丸い月がかかっている。その下は海辺の砂地で、見渡す限り、緑色の西瓜が植わっている。その真ん中に、十一、二の少年が、銀の首輪をして、手に鉄の銛（もり）を持って立っている。そして、一匹の猹（チャー）をめがけて、精一ぱい突きかかっている。猹（チャー）は、身をかわして、少年の股をくぐり抜けて逃げてしまった。
+　この少年こそ、閏土であった。私が彼と知り合いになったとき、彼は十いくつの子供であったが、今はもう三十以上になっているはずだ。
+　そのころ、私の父はまだ生きていて、家計も楽であったから、私は坊ちゃん育ちにおさまっていた。その年は、ちょうど一族の者が、三十年ごとにおとずれる祭の当番に当たっていたので、非常ににぎやかであった。正月には祖先の像を祭り、供物もたくさん並べ、祭器も立派なものを使い、拝む人も多かった。したがって、祭器の番をする人間が必要になった。
+　小作人の忙月（マンユエ）のせがれが閏土であった。彼は、私の家へ手伝いに来ていたが、祭器の番をさせるために、自分の息子を呼び寄せたいと、父に申し出た。父はそれを許した。
+　私は、それを聞いてうれしかった。というのは、以前から閏土の話を聞いていたからである。彼は私と同じ年ぐらいで、閏月に生れたし、五行が欠けているので、いつも銀の首輪をはめているということであった。彼はわなをかけることが上手だという話であった。
+　それからというものは、私は毎日、新年になるのを待ち焦がれていた。新年になれば、閏土が来るからだ。ようやく年末になって、ある日、母が、
+「閏土が来たよ。」
+　と言ってくれたとき、私は飛ぶようにして見に行った。彼は台所にいた。紫色の丸い顔をして、小さなあじろ笠をかぶり、銀の首輪をしていた。彼は人見知りをしたが、私だけには何でも話した。
+　あくる日、私は彼といっしょに鳥を捕えに行った。
+「今日はだめだ。大雪が降らなければ。」
+　と、彼は言った。
+「雪が降って、地面が雪に埋まってから、棒切れで大きな竹笊（たけざる）を支えておいて、その下へ籾殻（もみがら）を撒いておくんだ。鳥がそこへ来てついばむとき、遠くからその棒につないだ紐を引くんだよ。そうすれば、いろんな鳥が捕れるよ。竹鶏（ちくけい）だの、角鶏（チャー）だの、鳩だの、青い背中の……。」
+　私は、雪の降るのを待ち望んだ。
+　閏土は、また私にいろいろなことを話した。それは皆、私の聞いたこともないことばかりであった。海辺には、五色の貝殻がたくさんあること。西瓜には、こんな危険があることなどを。
+「海辺の砂地には、西瓜を作らないとだめだ。ところが、西瓜ができかけると、猹（チャー）というやつが来て、食い荒らすんだ。だから、夜になると、鉄の銛を持って、見張りに行くんだよ。」
+　私は、そのときまで、世の中に猹（チャー）というものがいることを知らなかった。
+「そいつが、西瓜を食いに来たら、銛で突くんだ。やつはずるい畜生で、こっちが狙うと、さっと逃げてしまうんだ。」
+　私はそのとき、猹（チャー）というものを、どんな動物か知らなかったが、なんとなく恐ろしいもののように感じた。
+「今は寒いからだめだけれど、夏になったら、おいでよ。昼間は、海辺へ行って貝殻を拾うんだ。赤いのや、青いのや、鬼おどしや、観音の手なんかが拾えるよ。晩には、父といっしょに西瓜の番をしに行くんだ。お前も行ってごらん。」
+「泥棒を見張るのかい。」
+「いいや。通りがかりの人が、一つや二つ取って食ったって、泥棒だなんて言やしないよ。見張るのは、猹（チャー）と、猪（いのしし）と、針鼠さ。」
+　私は、海辺の子供たちの生活にあこがれた。私の友達は、窓から見える四角な空しか知らないのだ。
+　閏土が帰るとき、私は声をあげて泣いた。彼も台所の隅に隠れて泣いていた。
+　それから、またたく間に三十年が過ぎ去った。
+　ある日の昼過ぎであった。寒かったが、飯を食って茶を飲んでいると、外で足音がして、
+「ハッ、迅ちゃん。」
+　という声がした。
+　私はびっくりして茶碗を取り落しそうになった。急いで振り向くと、そこに立っていたのは、まさしく閏土であった。
+　私は思わず、
+「やあ、閏土。よく来たね。」
+　と言った。
+　言いたいことは山ほどあった。角鶏（チャー）のこと、跳魚（はぜ）のこと、貝殻のこと、猹（チャー）のこと……。それらが一時に胸の中に湧き上ってきて、友の口を借りて吐き出されるのを待っているかのようであった。しかし、その言葉は、喉のところでつかえてしまって、どうしても口へ出なかった。
+　彼はそのまま突っ立っていた。喜びと寂しさの色が、顔に現われた。唇が動いたが、声にはならなかった。そして恭しい態度をとると、はっきりこう言った。
+「旦那様！……」
+　私は身震いした。悲しむべき厚い壁が、二人の間を隔ててしまっているのを感じた。私には口がきけなかった。
+　彼は振り返って、陰に隠れていた子供を引き出した。
+「ほら、水生、旦那様におじぎをするんだ。」
+　そして、私に向かって、
+「こいつは水生といって、私の五番目の子供ですが、世間へ出たことがないので、おずおずしております。」
+　と言った。
+　水生は、はにかみながらおじぎをした。
+　私は、閏土と話をした。彼は、今はもう大変な貧乏をしているということであった。子供は大勢だし、飢饉はあるし、税金は高いし、兵隊は来るし、泥棒は出るし、役人はうるさいし、すっかりひどい目にあって、まるで木偶（でく）のようになってしまった、ということであった。
+　母と私は、彼を気の毒に思った。それで、要らない道具を、彼にやることにした。
+　午後になると、彼は、それらの品物を船に積んで、水生を連れて帰って行った。
+　九日が過ぎて、いよいよ出発の日が来た。閏土は、またやって来た。こんどは、五つになる女の子を連れて来ただけで、水生は来なかった。
+　私たちは、一日中忙しくて、話をする暇もなかった。そして、夕方になって船に乗った。
+　船の中で、宏児と私が、名残を惜しむように、薄暗い窓の外を眺めていると、彼がふと聞いた。
+「おじさん、僕たちは、いつ帰って来るの。」
+「帰って来る？　どうして、まだ行かない先に、帰ることなどを考えるんだい。」
+「だって、水生が僕を待っているんだもの。僕の家へ遊びに来るって約束したんだもの。」
+　私は、それを聞いて、うれしくもあり、寂しくもあった。私と閏土との距離は、今はこんなに遠くなってしまったが、若い者同士は、やはり心が通い合っているのだと思った。
+　私は考えた。――希望とは、本来あるとも言えぬし、ないとも言えない。それは地上の道のようなものである。もともと地上には道はない。歩く人が多くなれば、それが道になるのだ。
+
+（青空文庫より）
+            </div>
+        </div>
+    </section>
+
+    <section id="quiz">
+        <h2>06. KNOWLEDGE TEST</h2>
+        <div id="quiz-container"></div>
+    </section>
+
+    <footer>
+        <p>PROJECT: HOMETOWN // VER 2.0</p>
+        <p>DEPLOYED BY VERCEL</p>
+    </footer>
+</div>
+
+<script>
+    // クイズデータ
+    const questions = [
+        { q: "Q1. 閏土が少年の頃、動物を突くために持っていた武器は？", a: "鉄の銛", o: ["銀の首輪", "鉄の銛", "木の棒"] },
+        { q: "Q2. 大人になった閏土は、私を何と呼んで絶望させた？", a: "旦那様", o: ["迅ちゃん", "兄さん", "旦那様"] },
+        { q: "Q3. 「ヤンおばさん」の、かつての呼び名は？", a: "豆腐屋小町", o: ["豆腐屋小町", "足長おばさん", "コンパス娘"] },
+        { q: "Q4. ラストシーンで「希望」は何に例えられた？", a: "地上の道", o: ["空の星", "地上の道", "海の波"] }
+    ];
+
+    const quizContainer = document.getElementById('quiz-container');
+
+    questions.forEach((data, index) => {
+        const wrap = document.createElement('div');
+        wrap.className = 'cyber-card';
+        
+        const qTitle = document.createElement('div');
+        qTitle.style.color = 'var(--primary)';
+        qTitle.style.fontWeight = 'bold';
+        qTitle.textContent = `QUERY_0${index + 1} >> ${data.q}`;
+        wrap.appendChild(qTitle);
+
+        const resBox = document.createElement('div');
+        resBox.className = 'result-box';
+        
+        data.o.forEach(opt => {
+            const btn = document.createElement('button');
+            btn.className = 'quiz-option';
+            btn.textContent = `> ${opt}`;
+            btn.onclick = () => {
+                if(resBox.style.display === 'block') return;
+                resBox.style.display = 'block';
+                if(opt === data.a) {
+                    resBox.textContent = "ACCESS GRANTED: 正解";
+                    resBox.classList.add('res-correct');
+                } else {
+                    resBox.textContent = "ACCESS DENIED: 不正解";
+                    resBox.classList.add('res-wrong');
+                }
+            };
+            wrap.appendChild(btn);
+        });
+
+        wrap.appendChild(resBox);
+        quizContainer.appendChild(wrap);
+    });
+</script>
+
+</body>
+</html>        }
 
         /* PC向けの余白調整 */
         @media (min-width: 600px) {
